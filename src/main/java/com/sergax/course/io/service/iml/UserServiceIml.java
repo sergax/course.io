@@ -1,20 +1,23 @@
-package com.sergax.course.io.service;
+package com.sergax.course.io.service.iml;
 
 import com.google.firebase.cloud.FirestoreClient;
 import com.sergax.course.io.entity.User;
+import com.sergax.course.io.service.UserService;
 import com.sergax.course.io.service.exceptions.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceIml {
+public class UserServiceIml implements UserService {
     private static final String COLLECTION_NAME = "users";
 
-    public String createUser(User user) throws ExecutionException, InterruptedException {
+    @SneakyThrows
+    @Override
+    public String create(User user) {
         var firestore = FirestoreClient.getFirestore();
         return firestore.collection(COLLECTION_NAME)
                 .document(user.getName())
@@ -24,7 +27,9 @@ public class UserServiceIml {
                 .toString();
     }
 
-    public User getUser(String name) throws ExecutionException, InterruptedException {
+    @SneakyThrows
+    @Override
+    public User getByName(String name) {
         var firestore = FirestoreClient.getFirestore();
         var documentSnapshot = firestore.collection(COLLECTION_NAME).document(name).get().get();
 
@@ -35,7 +40,9 @@ public class UserServiceIml {
         }
     }
 
-    public String updateUser(User user) throws ExecutionException, InterruptedException {
+    @SneakyThrows
+    @Override
+    public String update(User user) {
         var firestore = FirestoreClient.getFirestore();
         return firestore.collection(COLLECTION_NAME)
                 .document(user.getName())
@@ -45,7 +52,9 @@ public class UserServiceIml {
                 .toString();
     }
 
-    public Set<User> getAllUsers() throws ExecutionException, InterruptedException {
+    @SneakyThrows
+    @Override
+    public Set<User> getAll()  {
         var firestore = FirestoreClient.getFirestore();
         var documentRef = firestore.collection(COLLECTION_NAME).listDocuments().iterator();
         var users = new HashSet<User>();

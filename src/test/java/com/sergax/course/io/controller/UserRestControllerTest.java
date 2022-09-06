@@ -1,7 +1,7 @@
 package com.sergax.course.io.controller;
 
 import com.sergax.course.io.entity.User;
-import com.sergax.course.io.service.UserServiceIml;
+import com.sergax.course.io.service.iml.UserServiceIml;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,10 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.concurrent.ExecutionException;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,26 +29,26 @@ class UserRestControllerTest {
     }
 
     @Test
-    void getUser() throws ExecutionException, InterruptedException {
+    void getUser() {
         userRestController.getUser(userTest.getName());
-        verify(userServiceIml).getUser(userTest.getName());
+        verify(userServiceIml).getByName(userTest.getName());
     }
 
     @Test
-    void getAllUsers() throws ExecutionException, InterruptedException {
+    void getAllUsers() {
         userRestController.getAllUsers();
-        verify(userServiceIml).getAllUsers();
+        verify(userServiceIml).getAll();
     }
 
     @Test
-    void createUser() throws ExecutionException, InterruptedException {
+    void createUser() {
         userRestController.createUser(userTest);
-        verify(userServiceIml).createUser(userTest);
+        verify(userServiceIml).create(userTest);
     }
 
     @Test
-    void updateUser() throws ExecutionException, InterruptedException {
+    void updateUser() {
         userRestController.updateUser(userTest);
-        verify(userServiceIml).updateUser(userTest);
+        verify(userServiceIml).update(userTest);
     }
 }
