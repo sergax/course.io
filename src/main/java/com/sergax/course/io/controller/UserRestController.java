@@ -3,6 +3,8 @@ package com.sergax.course.io.controller;
 import com.sergax.course.io.entity.User;
 import com.sergax.course.io.service.UserServiceIml;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -15,22 +17,23 @@ public class UserRestController {
     private final UserServiceIml userServiceIml;
 
     @GetMapping("/{name}")
-    public User getUser(@PathVariable String name) throws ExecutionException, InterruptedException {
-        return userServiceIml.getUser(name);
+    public ResponseEntity<User> getUser(@PathVariable String name) throws ExecutionException, InterruptedException {
+        return ResponseEntity.ok(userServiceIml.getUser(name));
     }
 
     @GetMapping()
-    public Set<User> getAllUsers() throws ExecutionException, InterruptedException {
-        return userServiceIml.getAllUsers();
+    public ResponseEntity<Set<User>> getAllUsers() throws ExecutionException, InterruptedException {
+        return ResponseEntity.ok(userServiceIml.getAllUsers());
     }
 
     @PostMapping
-    public String createUser(@RequestBody User user) throws ExecutionException, InterruptedException {
-        return userServiceIml.createUser(user);
+    public ResponseEntity<?> createUser(@RequestBody User user) throws ExecutionException, InterruptedException {
+        return new ResponseEntity<>(userServiceIml.createUser(user), HttpStatus.CREATED);
     }
 
     @PutMapping
-    public String updateUser(@RequestBody User user) throws ExecutionException, InterruptedException {
-        return userServiceIml.updateUser(user);
+    public ResponseEntity<?> updateUser(@RequestBody User user) throws ExecutionException, InterruptedException {
+        return ResponseEntity.ok(userServiceIml.updateUser(user));
     }
+
 }
