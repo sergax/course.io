@@ -1,6 +1,6 @@
 package com.sergax.courseio.controller;
 
-import com.sergax.courseio.entity.Role;
+import com.sergax.courseio.model.Role;
 import com.sergax.courseio.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

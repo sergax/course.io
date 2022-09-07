@@ -1,8 +1,8 @@
 package com.sergax.courseio.service.iml;
 
 import com.google.firebase.cloud.FirestoreClient;
-import com.sergax.courseio.entity.Role;
-import com.sergax.courseio.entity.User;
+import com.sergax.courseio.model.Role;
+import com.sergax.courseio.model.User;
 import com.sergax.courseio.service.RoleService;
 import com.sergax.courseio.service.UserService;
 import com.sergax.courseio.service.exceptions.EntityNotFoundException;
@@ -19,7 +19,7 @@ import static java.lang.String.format;
 @RequiredArgsConstructor
 public class UserServiceIml implements UserService {
     private final RoleService roleService;
-    private static final String COLLECTION_NAME = "users";
+    private static final String COLLECTION_USERS = "users";
 
     @SneakyThrows
     @Override
@@ -35,7 +35,7 @@ public class UserServiceIml implements UserService {
         docUser.put("roleId", user.getRoleId());
         docUser.put("courses", user.getCourseIds());
 
-        FirestoreClient.getFirestore().collection(COLLECTION_NAME)
+        FirestoreClient.getFirestore().collection(COLLECTION_USERS)
                 .document()
                 .create(docUser);
         return user;
@@ -45,7 +45,7 @@ public class UserServiceIml implements UserService {
     @Override
     public User getById(String id) {
         var firestore = FirestoreClient.getFirestore();
-        var documentSnapshot = firestore.collection(COLLECTION_NAME).document(id).get().get();
+        var documentSnapshot = firestore.collection(COLLECTION_USERS).document(id).get().get();
 
         if (documentSnapshot.exists()) {
             return documentSnapshot.toObject(User.class);
@@ -58,7 +58,7 @@ public class UserServiceIml implements UserService {
     @SneakyThrows
     @Override
     public User update(String id, User user) {
-        FirestoreClient.getFirestore().collection(COLLECTION_NAME)
+        FirestoreClient.getFirestore().collection(COLLECTION_USERS)
                 .document(id)
                 .set(user);
 
@@ -72,20 +72,21 @@ public class UserServiceIml implements UserService {
     @Override
     public Set<User> getAll() {
         var firestore = FirestoreClient.getFirestore();
-        var documentRef = firestore.collection(COLLECTION_NAME).listDocuments().iterator();
+        var documentRef = firestore.collection(COLLECTION_USERS).listDocuments().iterator();
         var users = new HashSet<User>();
 
         while (documentRef.hasNext()) {
             var documentSnapshot = documentRef.next().get().get();
             var user = documentSnapshot.toObject(User.class);
-            user.setId(documentSnapshot.getId());
+            if (user != null) {
+                user.setId(documentSnapshot.getId());
+            }
             users.add(user);
         }
         return users;
     }
 
-    @Override
-    public boolean isUserExistsByEmail(String email) {
+    private boolean isUserExistsByEmail(String email) {
         return getAll().stream().anyMatch(user -> user.getEmail().equals(email));
     }
 }

@@ -1,6 +1,6 @@
 package com.sergax.courseio.controller;
 
-import com.sergax.courseio.entity.User;
+import com.sergax.courseio.model.User;
 import com.sergax.courseio.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

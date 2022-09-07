@@ -1,4 +1,4 @@
-package com.sergax.courseio.entity;
+package com.sergax.courseio.model;
 
 import com.google.cloud.firestore.annotation.DocumentId;
 import lombok.AllArgsConstructor;
@@ -12,9 +12,12 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Role {
+public class User {
     @DocumentId
     private String id;
     private String name;
-    private List<String> userIds;
+    private String email;
+    private String password;
+    private String roleId;
+    private List<String> courseIds;
 }

@@ -1,7 +1,7 @@
 package com.sergax.courseio.service.iml;
 
 import com.google.firebase.cloud.FirestoreClient;
-import com.sergax.courseio.entity.Role;
+import com.sergax.courseio.model.Role;
 import com.sergax.courseio.service.RoleService;
 import com.sergax.courseio.service.exceptions.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +35,7 @@ public class RolesServiceIml implements RoleService {
     @SneakyThrows
     @Override
     public Role getById(String id) {
-        var firestore = FirestoreClient.getFirestore();
-        var documentSnapshot = firestore.collection(COLLECTION_ROLES).document(id).get().get();
-
+        var documentSnapshot = FirestoreClient.getFirestore().collection(COLLECTION_ROLES).document(id).get().get();
         if (documentSnapshot.exists()) {
             return documentSnapshot.toObject(Role.class);
         } else {
@@ -49,9 +47,12 @@ public class RolesServiceIml implements RoleService {
     @SneakyThrows
     @Override
     public Role update(String id, Role role) {
-        FirestoreClient.getFirestore().collection(COLLECTION_ROLES)
-                .document(id)
-                .set(role);
+        if (id != null && role != null) {
+            FirestoreClient.getFirestore()
+                    .collection(COLLECTION_ROLES)
+                    .document(id)
+                    .set(role);
+        }
         return role;
     }
 
@@ -65,7 +66,9 @@ public class RolesServiceIml implements RoleService {
         while (documentRef.hasNext()) {
             var documentSnapshot = documentRef.next().get().get();
             var role = documentSnapshot.toObject(Role.class);
-            role.setId(documentSnapshot.getId());
+            if (role != null) {
+                role.setId(documentSnapshot.getId());
+            }
             roles.add(role);
         }
         return roles;
