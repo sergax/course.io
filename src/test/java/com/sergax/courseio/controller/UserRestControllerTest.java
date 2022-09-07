@@ -1,7 +1,7 @@
-package com.sergax.course.io.controller;
+package com.sergax.courseio.controller;
 
-import com.sergax.course.io.entity.User;
-import com.sergax.course.io.service.iml.UserServiceIml;
+import com.sergax.courseio.entity.User;
+import com.sergax.courseio.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +14,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UserRestControllerTest {
     @Mock
-    private UserServiceIml userServiceIml;
+    private UserService userService;
     @InjectMocks
     private UserRestController userRestController;
     private User userTest;
@@ -22,6 +22,7 @@ class UserRestControllerTest {
     @BeforeEach
     void setUp() {
         userTest = User.builder()
+                .id("123456")
                 .name("name")
                 .email("email")
                 .password("123456")
@@ -30,25 +31,25 @@ class UserRestControllerTest {
 
     @Test
     void getUser() {
-        userRestController.getUser(userTest.getName());
-        verify(userServiceIml).getByName(userTest.getName());
+        userRestController.getUserById(userTest.getId());
+        verify(userService).getById(userTest.getId());
     }
 
     @Test
     void getAllUsers() {
         userRestController.getAllUsers();
-        verify(userServiceIml).getAll();
+        verify(userService).getAll();
     }
 
     @Test
     void createUser() {
         userRestController.createUser(userTest);
-        verify(userServiceIml).create(userTest);
+        verify(userService).create(userTest);
     }
 
     @Test
     void updateUser() {
-        userRestController.updateUser(userTest);
-        verify(userServiceIml).update(userTest);
+        userRestController.updateUser(userTest.getId(), userTest);
+        verify(userService).update(userTest.getId(), userTest);
     }
 }

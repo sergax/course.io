@@ -1,4 +1,4 @@
-package com.sergax.course.io;
+package com.sergax.courseio;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
